@@ -196,14 +196,14 @@ export default function App() {
         
         <h3 className="text-xl font-display font-bold text-white mb-4 flex items-center gap-2">
           <Icons.Chrome />
-          {lang === 'ru' ? 'Как установить?' : 'როგორ დავაყენოთ?'}
+          {lang === 'ru' ? 'Установка' : 'დაყენება'}
         </h3>
         
         <div className="space-y-4 text-gray-300">
-          <p className="text-sm">
+          <p className="text-sm border-l-2 border-fang-red pl-3 text-gray-400 italic">
             {lang === 'ru' 
-              ? 'Ваш браузер заблокировал автоматическую установку. Пожалуйста, сделайте это вручную:'
-              : 'თქვენმა ბრაუზერმა დაბლოკა ავტომატური ინსტალაცია. გთხოვთ, გააკეთოთ ეს ხელით:'}
+              ? 'Если значка установки нет, используйте запасной метод:'
+              : 'თუ ინსტალაციის ხატულა არ არის, გამოიყენეთ ალტერნატიული მეთოდი:'}
           </p>
           
           <div className="bg-fang-gray/50 p-4 rounded border border-gray-700">
@@ -211,12 +211,12 @@ export default function App() {
               <span className="bg-fang-red text-white w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold shrink-0">1</span>
               <div>
                 <p className="font-bold text-white mb-1">
-                  {lang === 'ru' ? 'Адресная строка' : 'მისამართების ზოლი'}
+                  {lang === 'ru' ? 'Меню браузера' : 'ბრაუზერის მენიუ'}
                 </p>
                 <p className="text-xs text-gray-400">
                   {lang === 'ru' 
-                    ? 'Посмотрите в правый угол строки, где написан адрес сайта. Там есть иконка (монитор со стрелкой).'
-                    : 'შეხედეთ საიტის მისამართის მარჯვენა კუთხეს. იქ არის ხატულა (მონიტორი ისრით).'}
+                    ? 'Нажмите на три точки (⋮) в правом верхнем углу.'
+                    : 'დააჭირეთ სამ წერტილს (⋮) მარჯვენა ზედა კუთხეში.'}
                 </p>
               </div>
             </div>
@@ -225,12 +225,26 @@ export default function App() {
               <span className="bg-fang-red text-white w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold shrink-0">2</span>
               <div>
                 <p className="font-bold text-white mb-1">
-                  {lang === 'ru' ? 'Меню браузера' : 'ბრაუზერის მენიუ'}
+                  {lang === 'ru' ? 'Сохранить и поделиться' : 'შენახვა და გაზიარება'}
                 </p>
                 <p className="text-xs text-gray-400">
                   {lang === 'ru'
-                    ? 'Нажмите на три точки (⋮) в правом верхнем углу → "Установить приложение FangToolkit".'
-                    : 'დააჭირეთ სამ წერტილს (⋮) მარჯვენა ზედა კუთხეში → "Install FangToolkit".'}
+                    ? 'Выберите "Сохранить и поделиться" (или "Дополнительные инструменты") -> "Создать ярлык...".'
+                    : 'აირჩიეთ "შენახვა და გაზიარება" -> "მალსახმობის შექმნა...".'}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 mt-3">
+              <span className="bg-fang-red text-white w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold shrink-0">3</span>
+              <div>
+                <p className="font-bold text-white mb-1">
+                  {lang === 'ru' ? 'Галочка' : 'მონიშვნა'}
+                </p>
+                <p className="text-xs text-gray-400">
+                  {lang === 'ru'
+                    ? 'Обязательно поставьте галочку "Открыть в отдельном окне".'
+                    : 'აუცილებლად მონიშნეთ "ცალკე ფანჯარაში გახსნა".'}
                 </p>
               </div>
             </div>
