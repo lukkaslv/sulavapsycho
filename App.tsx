@@ -58,20 +58,37 @@ export default function App() {
   const [isStandalone, setIsStandalone] = useState(false);
 
   useEffect(() => {
-    // Check if already installed
+    // 1. Check if the app is already installed
     if (window.matchMedia('(display-mode: standalone)').matches) {
       setIsStandalone(true);
     }
 
+    // 2. Check if the event was caught early by the script in index.html
+    if ((window as any).deferredPrompt) {
+      setDeferredPrompt((window as any).deferredPrompt);
+    }
+
+    // 3. Listen for the event in case it happens now or later
     const handler = (e: any) => {
       e.preventDefault();
       setDeferredPrompt(e);
+      // Update global variable too, just in case
+      (window as any).deferredPrompt = e;
     };
     window.addEventListener('beforeinstallprompt', handler);
     return () => window.removeEventListener('beforeinstallprompt', handler);
   }, []);
 
   const handleInstallClick = async () => {
+    // Check if running from file system (will not work)
+    if (window.location.protocol === 'file:') {
+       alert(lang === 'ru' 
+         ? "Установка невозможна при запуске из файла (file://). Вам нужно запустить локальный сервер (например, через 'npx serve')."
+         : "ინსტალაცია შეუძლებელია ფაილიდან გაშვებისას (file://). თქვენ უნდა გაუშვათ ლოკალური სერვერი."
+       );
+       return;
+    }
+
     if (deferredPrompt) {
       // Automatic way
       deferredPrompt.prompt();
@@ -80,10 +97,10 @@ export default function App() {
         setDeferredPrompt(null);
       }
     } else {
-      // Manual instruction
+      // Fallback instruction
       const msg = lang === 'ru' 
-        ? "Чтобы установить приложение, нажмите на значок установки (монитор или +) в правой части адресной строки браузера."
-        : "აპლიკაციის დასაყენებლად დააჭირეთ ინსტალაციის ხატულას (მონიტორი ან +) ბრაუზერის მისამართების ზოლის მარჯვენა მხარეს.";
+        ? "Браузер пока не готов к автоматической установке. Пожалуйста, проверьте адресную строку (справа) на наличие иконки установки."
+        : "ბრაუზერი ჯერ არ არის მზად ავტომატური ინსტალაციისთვის. გთხოვთ, შეამოწმოთ მისამართების ზოლი (მარჯვნივ) ინსტალაციის ხატულაზე.";
       alert(msg);
     }
   };
