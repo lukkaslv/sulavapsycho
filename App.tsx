@@ -46,6 +46,15 @@ const Icons = {
       <polyline points="7 10 12 15 17 10"/>
       <line x1="12" x2="12" y1="15" y2="3"/>
     </svg>
+  ),
+  X: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M18 6 6 18"/>
+      <path d="m6 6 18 18"/>
+    </svg>
+  ),
+  Chrome: () => (
+     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="21.17" x2="12" y1="8" y2="8"/><line x1="3.95" x2="8.54" y1="6.06" y2="14"/><line x1="10.88" x2="15.46" y1="21.94" y2="14"/></svg>
   )
 };
 
@@ -56,6 +65,7 @@ export default function App() {
   const [favorites, setFavorites] = useState<number[]>([]);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isStandalone, setIsStandalone] = useState(false);
+  const [showInstallHelp, setShowInstallHelp] = useState(false);
 
   useEffect(() => {
     // 1. Check if the app is already installed
@@ -83,7 +93,7 @@ export default function App() {
     // Check if running from file system (will not work)
     if (window.location.protocol === 'file:') {
        alert(lang === 'ru' 
-         ? "Установка невозможна при запуске из файла (file://). Вам нужно запустить локальный сервер (например, через 'npx serve')."
+         ? "Установка невозможна при запуске из файла (file://). Вам нужно запустить локальный сервер."
          : "ინსტალაცია შეუძლებელია ფაილიდან გაშვებისას (file://). თქვენ უნდა გაუშვათ ლოკალური სერვერი."
        );
        return;
@@ -97,11 +107,8 @@ export default function App() {
         setDeferredPrompt(null);
       }
     } else {
-      // Fallback instruction
-      const msg = lang === 'ru' 
-        ? "Браузер пока не готов к автоматической установке. Пожалуйста, проверьте адресную строку (справа) на наличие иконки установки."
-        : "ბრაუზერი ჯერ არ არის მზად ავტომატური ინსტალაციისთვის. გთხოვთ, შეამოწმოთ მისამართების ზოლი (მარჯვნივ) ინსტალაციის ხატულაზე.";
-      alert(msg);
+      // Show visual instruction modal
+      setShowInstallHelp(true);
     }
   };
 
@@ -174,12 +181,79 @@ export default function App() {
     setSelectedTechnique(randomTech);
   };
 
+  // --- RENDER ---
+
+  // Modal for install help
+  const InstallHelpModal = () => (
+    <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-fang-dark border border-fang-red p-6 max-w-md w-full relative rounded-sm shadow-2xl shadow-red-900/20">
+        <button 
+          onClick={() => setShowInstallHelp(false)}
+          className="absolute top-4 right-4 text-gray-500 hover:text-white"
+        >
+          <Icons.X />
+        </button>
+        
+        <h3 className="text-xl font-display font-bold text-white mb-4 flex items-center gap-2">
+          <Icons.Chrome />
+          {lang === 'ru' ? 'Как установить?' : 'როგორ დავაყენოთ?'}
+        </h3>
+        
+        <div className="space-y-4 text-gray-300">
+          <p className="text-sm">
+            {lang === 'ru' 
+              ? 'Ваш браузер заблокировал автоматическую установку. Пожалуйста, сделайте это вручную:'
+              : 'თქვენმა ბრაუზერმა დაბლოკა ავტომატური ინსტალაცია. გთხოვთ, გააკეთოთ ეს ხელით:'}
+          </p>
+          
+          <div className="bg-fang-gray/50 p-4 rounded border border-gray-700">
+            <div className="flex items-start gap-3 mb-3">
+              <span className="bg-fang-red text-white w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold shrink-0">1</span>
+              <div>
+                <p className="font-bold text-white mb-1">
+                  {lang === 'ru' ? 'Адресная строка' : 'მისამართების ზოლი'}
+                </p>
+                <p className="text-xs text-gray-400">
+                  {lang === 'ru' 
+                    ? 'Посмотрите в правый угол строки, где написан адрес сайта. Там есть иконка (монитор со стрелкой).'
+                    : 'შეხედეთ საიტის მისამართის მარჯვენა კუთხეს. იქ არის ხატულა (მონიტორი ისრით).'}
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex items-start gap-3">
+              <span className="bg-fang-red text-white w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold shrink-0">2</span>
+              <div>
+                <p className="font-bold text-white mb-1">
+                  {lang === 'ru' ? 'Меню браузера' : 'ბრაუზერის მენიუ'}
+                </p>
+                <p className="text-xs text-gray-400">
+                  {lang === 'ru'
+                    ? 'Нажмите на три точки (⋮) в правом верхнем углу → "Установить приложение FangToolkit".'
+                    : 'დააჭირეთ სამ წერტილს (⋮) მარჯვენა ზედა კუთხეში → "Install FangToolkit".'}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <button 
+            onClick={() => setShowInstallHelp(false)}
+            className="w-full py-3 bg-fang-red text-white font-display uppercase tracking-widest text-sm hover:bg-red-700 transition-colors"
+          >
+            {lang === 'ru' ? 'Понятно' : 'გასაგებია'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
   if (selectedTechnique) {
     const tContent = selectedTechnique.content[lang];
     const isFav = favorites.includes(selectedTechnique.id);
     
     return (
       <div className="min-h-screen bg-fang-dark text-gray-200 p-4 md:p-8 font-sans">
+        {showInstallHelp && <InstallHelpModal />}
         <div className="max-w-3xl mx-auto">
           <button 
             onClick={() => setSelectedTechnique(null)}
@@ -245,6 +319,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-fang-dark text-gray-200 font-sans">
+      {showInstallHelp && <InstallHelpModal />}
       {/* Header */}
       <header className="border-b border-gray-900 bg-fang-dark/95 sticky top-0 z-50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
