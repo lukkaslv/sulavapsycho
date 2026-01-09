@@ -1,0 +1,15 @@
+{
+  "short_name": "FangToolkit",
+  "name": "Fang Toolkit: Therapy for Predators",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#050505",
+  "background_color": "#050505"
+}
